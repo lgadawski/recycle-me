@@ -10,9 +10,9 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class ResourcesController @Inject()(repo: ResourceRepository,
-                                    cc: MessagesControllerComponents
+                                    cc: ControllerComponents
                                    )(implicit ec: ExecutionContext)
-  extends MessagesAbstractController(cc) {
+  extends AbstractController(cc) {
 
   def get = Action.async { implicit request =>
     repo.list().map { resource =>
@@ -20,7 +20,13 @@ class ResourcesController @Inject()(repo: ResourceRepository,
     }
   }
 
+  def get (id: Int) = Action.async { implicit request =>
+    repo.get(id).map { resource =>
+      Ok(Json.toJson(resource))
+    }
+  }
+
   def add = Action.async { implicit request =>
-    
+    null
   }
 }
