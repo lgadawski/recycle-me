@@ -20,7 +20,9 @@ protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigPro
   private class ResourcesTable(tag: Tag) extends Table[Resource](tag, "RESOURCES") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
     def name = column[String]("name")
+
     def symbol = column[String]("symbol")
 
     def * = (id, name, symbol) <> ((Resource.apply _).tupled, Resource.unapply)
@@ -33,7 +35,14 @@ protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigPro
   }
 
   def get(id: Long): Future[Resource] = db.run {
-    resources.filter(_.id === id).result.head
+    resources.filter(_.id === id).result.map(r =>
+      if (r.isEmpty) null
+      else r.head
+    )
+  }
+
+  def delete(id: Long): Future[Int] = db.run {
+    resources.filter(_.id === id).delete
   }
 
   def save(input: Resource): Future[Resource] = db.run {
