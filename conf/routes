@@ -6,11 +6,15 @@
 GET     /                               controllers.Assets.at(path="/public", file="index.html")
 
 # Resources manipulation
-GET     /summary                        controllers.HomeController.appSummary
 
-GET     /api/resources                  controllers.ResourcesController.get
-GET     /api/resources:id               controllers.ResourcesController.get(id: Long)
-POST    /api/resources                  controllers.ResourcesController.add
+GET     /api/resources                  resources.ResourcesController.getAll
+GET     /api/resources/:id              resources.ResourcesController.get(id: Long)
+
++ nocsrf
+POST    /api/resources                  resources.ResourcesController.save
+
++ nocsrf
+PUT     /api/resources/:id              resources.ResourcesController.update(id: Long)
 
 # Map static resources from the /public folder to the file rosource path
 GET     /*file                          controllers.Assets.at(path="/public", file)

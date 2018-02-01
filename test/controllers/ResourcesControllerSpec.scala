@@ -1,7 +1,7 @@
 package controllers
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import models.{Resource, ResourceRepository}
+import models.ResourceRepository
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.when
 import org.scalatestplus.play._
@@ -9,6 +9,8 @@ import org.scalatestplus.play.guice._
 import play.api.test.Helpers._
 import play.api.test._
 import play.api.libs.json._
+import resources.{Resource, ResourceRepository, ResourcesController}
+import resources.model.ResourceRepository
 
 import scala.concurrent.Future
 
@@ -32,7 +34,7 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
           List(firstResource, secondResource)
         })
 
-      val home = controller.get().apply(FakeRequest(GET, "/api/resources"))
+      val home = controller.getAll().apply(FakeRequest(GET, "/api/resources"))
 
       // then
 
@@ -49,15 +51,19 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
     "return element requested by id" in {
       // given
 
-      val firstResource = Resource(1, "AA", "Aaa")
-      val secondResource = Resource(2, "AB", "Abb")
+      val givenResource = Resource(1, "AA", "Aaa")
 
       val repo = mock[ResourceRepository]
       val controller = new ResourcesController(repo, stubControllerComponents())
 
       // when
 
-      val home = controller.get().apply(FakeRequest(GET, "/api/resources/" + firstResource.id))
+      when(repo.get(givenResource.id))
+        .thenReturn(Future {
+          givenResource
+        })
+
+      val home = controller.get(givenResource.id).apply(FakeRequest(GET, "/api/resources/" + givenResource.id))
 
       // then
 
@@ -66,14 +72,13 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
 
       val result: Resource = Json.fromJson[Resource](contentAsJson(home)).get
 
-      result mustBe firstResource
+      result mustBe givenResource
     }
 
     "return element requested by id not found" in {
       // given
 
-      val firstResource = Resource(1, "AA", "Aaa")
-      val secondResource = Resource(2, "AB", "Abb")
+      val givenResource = Resource(1, "AA", "Aaa")
       val id = 3
 
       val repo = mock[ResourceRepository]
@@ -81,7 +86,34 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
 
       // when
 
-      val home = controller.get().apply(FakeRequest(GET, "/api/resources/" + id))
+      when(repo.get(id))
+        .thenReturn(Future {
+          givenResource
+        })
+
+      val home = controller.get(id).apply(FakeRequest(GET, "/api/resources/" + id))
+
+      // then
+
+      status(home) mustBe NOT_FOUND
+    }
+
+    "save new element requested by POST" in {
+      // given
+
+      val givenResource = Resource(null, "AA", "Aaa")
+
+      val repo = mock[ResourceRepository]
+      val controller = new ResourcesController(repo, stubControllerComponents())
+
+      // when
+
+      when(repo.save(givenResource))
+        .thenReturn(Future {
+          givenResource
+        })
+
+      val home = controller.get(id).apply(FakeRequest(GET, "/api/resources/" + id))
 
       // then
 
