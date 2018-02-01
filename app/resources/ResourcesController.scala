@@ -2,11 +2,10 @@ package resources
 
 import javax.inject._
 
-import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ResourcesController @Inject()(repository: ResourceRepository,
@@ -21,13 +20,9 @@ class ResourcesController @Inject()(repository: ResourceRepository,
   }
 
   def get(id: Long): Action[AnyContent] = Action.async { implicit request =>
-    repository.get(id).map { resource =>
-      Ok(Json.toJson(resource))
-    }.recover {
-      case e: Exception =>
-        Logger.debug(e.printStackTrace().toString)
-
-        NotFound
+    repository.get(id).map {
+      case null => NotFound
+      case r => Ok(Json.toJson(r))
     }
   }
 
@@ -36,18 +31,26 @@ class ResourcesController @Inject()(repository: ResourceRepository,
 
     repository.save(obj)
 
-    Ok(Json.obj("status" -> "OK", "message" -> "New resource saved!"))
+    Ok(Json.obj("message" -> "New resource saved!"))
   }
 
-  def update(id: Long): Action[JsValue] = Action(parse.json) { request =>
+  def update(id: Long): Action[JsValue] = Action.async(parse.json) { request =>
     val obj = request.body.as[Resource]
 
     if (id != obj.id) {
-      BadRequest(Json.obj("status" -> "Bad_request", "message" -> "Id from URL and body different!"))
+      Future.apply(BadRequest(Json.obj("message" -> "Id from URL and body different!")))
     } else {
-      repository.update(obj)
+      repository.update(obj).map {
+        case 0 => NotFound
+        case _ => Ok(Json.obj("message" -> "Resource updated!"))
+      }
+    }
+  }
 
-      Ok(Json.obj("status" -> "OK", "message" -> "Resource updated!"))
+  def delete(id: Long): Action[AnyContent] = Action.async {
+    repository.delete(id).map {
+      case 0 => NotFound
+      case _ => Ok(Json.obj("message" -> "Resource deleted!"))
     }
   }
 
