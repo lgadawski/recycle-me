@@ -1,49 +1,51 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
 
-import { AppComponent } from './app.component';
-import { ResourcesComponent } from './resources/resources.component';
-import { ResourcesFormComponent } from './resources/add/resources-form.component';
-import { AppService } from './app.service';
-import { ResourcesService } from './resources/resources.service';
-import { HttpClientModule } from '@angular/common/http';
-import { RouteExampleComponent } from './route-example/route-example.component';
+import {APP_CONFIG, AppConfig} from './config/app.config';
 
-const routes: Routes = [
-  {
-    path: 'scala',
-    component: RouteExampleComponent,
-    data: { technology: 'Scala' }
-  },
-  {
-    path: 'play',
-    component: RouteExampleComponent,
-    data: { technology: 'Play' }
-  },
-  {
-    path: 'angular',
-    component: RouteExampleComponent,
-    data: { technology: 'Angular' }
-  },
-  { path: '', redirectTo: '/play', pathMatch: 'full' }
-];
+import {AppRoutingModule} from './app-routing.module';
+import {SharedModule} from './shared/modules/shared.module';
+import {CoreModule} from './core/core.module';
+
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {HttpLoaderFactory} from './app.translate.factory';
+import {HeroTopComponent} from './heroes/hero-top/hero-top.component';
+import {ProgressBarService} from './core/progress-bar.service';
+import {ProgressInterceptor} from './shared/interceptors/progress.interceptor';
+import {TimingInterceptor} from './shared/interceptors/timing.interceptor';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ResourcesComponent,
-    ResourcesFormComponent,
-    RouteExampleComponent
-  ],
   imports: [
     BrowserModule,
-    HttpClientModule,
+    BrowserAnimationsModule,
     FormsModule,
-    RouterModule.forRoot(routes, { useHash: true })
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    SharedModule.forRoot(),
+    CoreModule,
+    AppRoutingModule
   ],
-  providers: [AppService, ResourcesService],
+  declarations: [
+    AppComponent,
+    HeroTopComponent
+  ],
+  providers: [
+    {provide: APP_CONFIG, useValue: AppConfig},
+    {provide: HTTP_INTERCEPTORS, useClass: ProgressInterceptor, multi: true, deps: [ProgressBarService]},
+    {provide: HTTP_INTERCEPTORS, useClass: TimingInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+}
