@@ -26,12 +26,12 @@ class ResourcesController @Inject()(repository: ResourceRepository,
     }
   }
 
-  def save: Action[JsValue] = Action(parse.json) { request =>
+  def save: Action[JsValue] = Action.async(parse.json) { request =>
     val obj = request.body.as[Resource]
 
-    repository.save(obj)
-
-    Ok(Json.obj("message" -> "New resource saved!"))
+    repository.save(obj).map { r =>
+      Ok(Json.toJson(r))
+    }
   }
 
   def update(id: Long): Action[JsValue] = Action.async(parse.json) { request =>
@@ -42,7 +42,7 @@ class ResourcesController @Inject()(repository: ResourceRepository,
     } else {
       repository.update(obj).map {
         case 0 => NotFound
-        case _ => Ok(Json.obj("message" -> "Resource updated!"))
+        case _ => Ok(Json.toJson(obj))
       }
     }
   }

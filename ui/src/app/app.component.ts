@@ -23,7 +23,8 @@ export class AppComponent {
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');
 
-    this.title.setTitle('Angular Example App');
+    // FIXME use translations
+    this.title.setTitle("RecycleMe!");
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
         switch (event.urlAfterRedirects) {
@@ -33,11 +34,11 @@ export class AppComponent {
               content: 'Angular Example app with Angular CLI, Angular Material and more'
             });
             break;
-          case '/' + AppConfig.routes.heroes:
-            this.title.setTitle('Heroes list');
+          case '/' + AppConfig.routes.resources:
+            this.title.setTitle('Resources list');
             this.meta.updateTag({
               name: 'description',
-              content: 'List of super-heroes'
+              content: 'List of super-resources'
             });
             break;
         }

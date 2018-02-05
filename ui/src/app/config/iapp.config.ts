@@ -2,7 +2,6 @@ export interface IAppConfig {
   routes: any;
   endpoints: any;
   votesLimit: number;
-  topHeroesLimit: number;
+  topResourcesLimit: number;
   snackBarDuration: number;
-  repositoryURL: string;
 }
