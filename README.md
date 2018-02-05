@@ -32,11 +32,9 @@
 * Make output directory ROOT/public/
 * Implement a proxy to localhost:9000
 
-# Project init
-
-Project seed based on a9e5dc4a2468a877d84b1d8609272d58ea47e835 from repo https://github.com/yohangz/scala-play-angular-seed 
-
-* https://github.com/yohangz
-* https://github.com/lahiruz
-* https://github.com/Arty26
-* https://github.com/sanuradhag
+## Project seed
+Project seed (build scripts) contributed by:
+- https://github.com/yohangz
+- https://github.com/lahiruz
+- https://github.com/Arty26
+- https://github.com/sanuradhag

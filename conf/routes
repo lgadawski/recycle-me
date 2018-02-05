@@ -1,12 +1,21 @@
-# Routes
 # This file defines all application routes (Higher priority routes first)
-# ~~~~
 
 # Load Angular index page
-GET     /                           controllers.Assets.at(path="/public", file="index.html")
+    GET     /                               controllers.Assets.at(path="/public", file="index.html")
 
-# An example route
-GET     /summary                    controllers.HomeController.appSummary
+# Resources manipulation
 
-# Map static resources from the /public folder to the file rosource path
-GET     /*file                      controllers.Assets.at(path="/public", file)
+    GET     /api/resources                  resources.ResourcesController.getAll
+    GET     /api/resources/:id              resources.ResourcesController.get(id: Long)
+
+    + nocsrf
+    POST    /api/resources                  resources.ResourcesController.save
+
+    + nocsrf
+    PUT     /api/resources/:id              resources.ResourcesController.update(id: Long)
+
+    + nocsrf
+    DELETE  /api/resources/:id              resources.ResourcesController.delete(id: Long)
+
+    # Map static resources from the /public folder to the file rosource path
+    GET     /*file                          controllers.Assets.at(path="/public", file)

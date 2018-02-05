@@ -1,0 +1,26 @@
+<div fxLayout="row">
+    <div fxFlex="10" fxFlex.gt-sm="20"></div>
+    <div fxFlex="90" fxFlex.gt-sm="80">
+        <h1 class="section-title">{{'topResources' | translate}}</h1>
+        <mat-progress-spinner *ngIf="!resources"
+                              class="progress-spinner"
+                              [color]="'primary'"
+                              [mode]="'indeterminate'">
+        </mat-progress-spinner>
+        <div id="resources-list" *ngIf="resources">
+            <ng-container *ngFor="let resource of resources">
+                <mat-card class="resource-card">
+                    <mat-card-header>
+                        <mat-card-title>{{resource.name}}</mat-card-title>
+                        <mat-card-subtitle>{{resource.symbol}}</mat-card-subtitle>
+                        <div class="flex-spacer"></div>
+                        <div class="resource-actions">
+                            {{resource.weight}}
+                        </div>
+                    </mat-card-header>
+                </mat-card>
+            </ng-container>
+        </div>
+    </div>
+    <div fxFlex="10" fxFlex.gt-sm="20"></div>
+</div>

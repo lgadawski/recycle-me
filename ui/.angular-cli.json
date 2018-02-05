@@ -18,8 +18,13 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
+      "stylesUrls": [
+        ""
+      ],
       "styles": [
-        "styles.css"
+        "assets/css/reset.css",
+        "assets/css/loading.css",
+        "assets/css/styles.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
