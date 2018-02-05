@@ -1,9 +1,9 @@
 
-#heroes-list {
+#resources-list {
   margin: 2em;
 }
 
-.hero-card {
+.resource-card {
   margin: 2em auto;
 }
 
@@ -12,7 +12,7 @@
 }
 
 @media (max-width: 680px) {
-  .hero-card {
+  .resource-card {
     width: 80%;
     margin: 0 auto;
   }

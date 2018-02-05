@@ -1,0 +1,49 @@
+<div id="left">
+    <h2 class="section-title">{{ 'resourcesList' | translate }}</h2>
+    <div>
+        <mat-progress-spinner *ngIf="!resources"
+                              class="progress-spinner"
+                              [color]="'primary'"
+                              [mode]="'indeterminate'">
+        </mat-progress-spinner>
+        <mat-list>
+            <mat-list-item *ngFor="let resource of resources">
+                <h3 mat-line [ngClass]="{'cp': resource.default}" (click)="seeResourceDetails(resource);"> {{resource.name}} </h3>
+                <p mat-line [ngClass]="{'cp': resource.default}" (click)="seeResourceDetails(resource);">
+                    <span>{{resource.symbol}}</span>
+                </p>
+                <div class="resource-actions">
+                    <mat-icon class="remove-icon" *ngIf="!resource.default"
+                              (click)="remove(resource);">
+                        delete
+                    </mat-icon>
+                </div>
+            </mat-list-item>
+        </mat-list>
+    </div>
+</div>
+<div id="right">
+    <h2 class="section-title">{{ 'createResource' | translate }}</h2>
+    <div>
+        <form [formGroup]="newResourceForm" #form="ngForm" (ngSubmit)="createNewResource(newResourceForm.value)">
+            <mat-input-container class="input-container">
+                <input matInput type="text"
+                       placeholder="{{'name' | translate}}"
+                       formControlName="name">
+            </mat-input-container>
+
+            <mat-input-container class="input-container">
+                <input matInput type="text"
+                       placeholder="{{'symbol' | translate}}"
+                       formControlName="symbol">
+            </mat-input-container>
+
+            <button mat-raised-button type="submit" [disabled]="!newResourceForm.valid">
+                {{'create' | translate}}
+            </button>
+
+            <div *ngIf="error">{{error | translate}}</div>
+        </form>
+    </div>
+</div>
+<div class="clear"></div>
