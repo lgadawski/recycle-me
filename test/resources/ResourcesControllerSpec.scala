@@ -1,17 +1,14 @@
-package controllers
+package resources
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import models.ResourceRepository
-import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
+import play.api.libs.json._
 import play.api.test.Helpers._
 import play.api.test._
-import play.api.libs.json._
-import resources.{Resource, ResourceRepository, ResourcesController}
-import resources.model.ResourceRepository
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting with MockitoSugar {
@@ -21,8 +18,8 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
     "return list of elements" in {
       // given
 
-      val firstResource = Resource(1, "AA", "Aaa")
-      val secondResource = Resource(2, "AB", "Abb")
+      val firstResource = ResourceJsonUtils(1, "AA", "Aaa")
+      val secondResource = ResourceJsonUtils(2, "AB", "Abb")
 
       val repo = mock[ResourceRepository]
       val controller = new ResourcesController(repo, stubControllerComponents())
@@ -51,7 +48,7 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
     "return element requested by id" in {
       // given
 
-      val givenResource = Resource(1, "AA", "Aaa")
+      val givenResource = ResourceJsonUtils(1, "AA", "Aaa")
 
       val repo = mock[ResourceRepository]
       val controller = new ResourcesController(repo, stubControllerComponents())
@@ -78,7 +75,7 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
     "return element requested by id not found" in {
       // given
 
-      val givenResource = Resource(1, "AA", "Aaa")
+      val givenResource = ResourceJsonUtils(1, "AA", "Aaa")
       val id = 3
 
       val repo = mock[ResourceRepository]
@@ -101,23 +98,10 @@ class ResourcesControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inje
     "save new element requested by POST" in {
       // given
 
-      val givenResource = Resource(null, "AA", "Aaa")
-
-      val repo = mock[ResourceRepository]
-      val controller = new ResourcesController(repo, stubControllerComponents())
-
       // when
-
-      when(repo.save(givenResource))
-        .thenReturn(Future {
-          givenResource
-        })
-
-      val home = controller.get(id).apply(FakeRequest(GET, "/api/resources/" + id))
 
       // then
 
-      status(home) mustBe NOT_FOUND
     }
   }
 }

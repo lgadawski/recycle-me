@@ -6,16 +6,17 @@
 # Resources manipulation
 
     GET     /api/resources                  resources.ResourcesController.getAll
-    GET     /api/resources/:id              resources.ResourcesController.get(id: Long)
+    GET     /api/resources/:id              resources.ResourcesController.get(id: Int)
+
+#
+#    + nocsrf
+#    POST    /api/resources                  resources.ResourcesController.save
+#
+#    + nocsrf
+#    PUT     /api/resources/:id              resources.ResourcesController.update(id: Int)
 
     + nocsrf
-    POST    /api/resources                  resources.ResourcesController.save
-
-    + nocsrf
-    PUT     /api/resources/:id              resources.ResourcesController.update(id: Long)
-
-    + nocsrf
-    DELETE  /api/resources/:id              resources.ResourcesController.delete(id: Long)
+    DELETE  /api/resources/:id              resources.ResourcesController.delete(id: Int)
 
     # Map static resources from the /public folder to the file rosource path
     GET     /*file                          controllers.Assets.at(path="/public", file)

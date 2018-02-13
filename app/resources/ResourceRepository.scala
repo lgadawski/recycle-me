@@ -2,6 +2,8 @@ package resources
 
 import javax.inject.{Inject, Singleton}
 
+import model.Tables
+import model.Tables.ResourcesRow
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
@@ -17,45 +19,34 @@ protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigPro
   import dbConfig._
   import profile.api._
 
-  private class ResourcesTable(tag: Tag) extends Table[Resource](tag, "RESOURCES") {
+  private val resources = Tables.Resources
 
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-
-    def name = column[String]("name")
-
-    def symbol = column[String]("symbol")
-
-    def * = (id, name, symbol) <> ((Resource.apply _).tupled, Resource.unapply)
-  }
-
-  private val resources = TableQuery[ResourcesTable]
-
-  def list(): Future[Seq[Resource]] = db.run {
+  def list(): Future[Seq[ResourcesRow]] = db.run {
     resources.result
   }
 
-  def get(id: Long): Future[Resource] = db.run {
+  def get(id: Int): Future[ResourcesRow] = db.run {
     resources.filter(_.id === id).result.map(r =>
       if (r.isEmpty) null
       else r.head
     )
   }
 
-  def delete(id: Long): Future[Int] = db.run {
+  def delete(id: Int): Future[Int] = db.run {
     resources.filter(_.id === id).delete
   }
 
-  def save(input: Resource): Future[Resource] = db.run {
-    (resources.map(r => (r.name, r.symbol))
-      returning resources.map(_.id)
-
-      into ((res, id) => Resource(id, res._1, res._2))
-      ) += (input.name, input.symbol)
-  }
-
-  def update(obj: Resource): Future[Int] = db.run {
-    resources.filter(_.id === obj.id)
-      .map(r => (r.name, r.symbol))
-      .update((obj.name, obj.symbol))
-  }
+//  def save(input: ResourcesRow): Future[ResourcesRow] = db.run {
+//    (resources.map(r => (r.name, r.symbol))
+//      returning resources.map(_.id)
+//
+//      into ((res, id) => ResourcesRow(id, res._1, res._2))
+//      ) += (input.name, input.symbol)
+//  }
+//
+//  def update(obj: ResourcesRow): Future[Int] = db.run {
+//    resources.filter(_.id === obj.id)
+//      .map(r => (r.name, r.symbol))
+//      .update((obj.name, obj.symbol))
+//  }
 }

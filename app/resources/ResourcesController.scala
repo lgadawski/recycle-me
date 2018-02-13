@@ -1,11 +1,20 @@
 package resources
 
+import java.sql.Timestamp
 import javax.inject._
 
+import play.api.libs.functional.syntax.unlift
 import play.api.libs.json._
 import play.api.mvc._
+import java.sql.Timestamp
 
-import scala.concurrent.{ExecutionContext, Future}
+import model.Tables._
+import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
+import play.api.libs.json.Writes._
+import play.api.libs.json._
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ResourcesController @Inject()(repository: ResourceRepository,
@@ -13,41 +22,43 @@ class ResourcesController @Inject()(repository: ResourceRepository,
                                    )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
 
+  import ResourceJsonUtils._
+
   def getAll: Action[AnyContent] = Action.async { implicit request =>
     repository.list().map { resource =>
       Ok(Json.toJson(resource))
     }
   }
 
-  def get(id: Long): Action[AnyContent] = Action.async { implicit request =>
+  def get(id: Int): Action[AnyContent] = Action.async { implicit request =>
     repository.get(id).map {
       case null => NotFound
-      case r => Ok(Json.toJson(r))
+      case resource => Ok(Json.toJson(resource))
     }
   }
 
-  def save: Action[JsValue] = Action.async(parse.json) { request =>
-    val obj = request.body.as[Resource]
+//  def save: Action[JsValue] = Action.async(parse.json) { request =>
+//    val obj = request.body.as[ResourcesRow]
+//
+//    repository.save(obj).map { r =>
+//      Ok(Json.toJson(r))
+//    }
+//  }
+//
+//  def update(id: Int): Action[JsValue] = Action.async(parse.json) { request =>
+//    val obj = request.body.as[Tables.ResourcesRow]
+//
+//    if (id != obj.id) {
+//      Future.apply(BadRequest(Json.obj("message" -> "Id from URL and body different!")))
+//    } else {
+//      repository.update(obj).map {
+//        case 0 => NotFound
+//        case _ => Ok(Json.toJson(obj))
+//      }
+//    }
+//  }
 
-    repository.save(obj).map { r =>
-      Ok(Json.toJson(r))
-    }
-  }
-
-  def update(id: Long): Action[JsValue] = Action.async(parse.json) { request =>
-    val obj = request.body.as[Resource]
-
-    if (id != obj.id) {
-      Future.apply(BadRequest(Json.obj("message" -> "Id from URL and body different!")))
-    } else {
-      repository.update(obj).map {
-        case 0 => NotFound
-        case _ => Ok(Json.toJson(obj))
-      }
-    }
-  }
-
-  def delete(id: Long): Action[AnyContent] = Action.async {
+  def delete(id: Int): Action[AnyContent] = Action.async {
     repository.delete(id).map {
       case 0 => NotFound
       case _ => Ok(Json.obj("message" -> "Resource deleted!"))
