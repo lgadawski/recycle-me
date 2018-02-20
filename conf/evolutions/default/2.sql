@@ -116,12 +116,19 @@ VALUES (5, 2, '0.01', 1100, 1, 1, (TIMESTAMP '2018-01-02 12:47:52.69'), null, nu
 INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
 VALUES (6, 2, '1.20', 30, 1, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
 INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
-VALUES (6, 2, '5.40', 20, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+VALUES (7, 2, '5.40', 20, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
 INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
-VALUES (6, 2, '10.00', 4, 4, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+VALUES (8, 2, '10.00', 4, 4, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
 INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
-VALUES (6, 2, '0.20', 23, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
-
+VALUES (9, 2, '0.20', 23, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
+VALUES (10, 1, '2.00', 50, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
+VALUES (11, 3, '2.00', 50, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
+VALUES (12, 4, '0.03', 120, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
+INSERT INTO RESOURCES("id", "resource_type_id", "price_per_kg", "weight", "address_id", "owner_id", "create_ts", "collected_ts", "deleted_ts")
+VALUES (13, 2, '3.40', 200, 3, 2, (TIMESTAMP '2018-01-02 12:47:52.69'), null, null);
 
 # --- !Downs
 

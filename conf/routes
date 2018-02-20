@@ -3,8 +3,10 @@
 # Load Angular index page
     GET     /                               controllers.Assets.at(path="/public", file="index.html")
 
-# Resources manipulation
+# Recommendation
+    GET     /api/resources/recommend        resources.RecommendationController.get(collectorId: Option[Int], cityId: Option[Int])
 
+# Resources manipulation
     GET     /api/resources                  resources.ResourcesController.getAll
     GET     /api/resources/:id              resources.ResourcesController.get(id: Int)
 
