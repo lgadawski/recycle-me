@@ -1,7 +1,6 @@
 package resources
 
 import javax.inject.{Inject, Singleton}
-
 import model.Tables
 import model.Tables.ResourcesRow
 import play.api.db.slick.DatabaseConfigProvider
@@ -11,7 +10,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ex: ExecutionContext) {
-
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   // These imports are important, the first one brings db into scope, which will let you do the actual db operations.
@@ -23,9 +21,25 @@ protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigPro
   private val addresses = Tables.Addresses
   private val collectorPreferences = Tables.CollectorPreferences
 
-  def getByCollectorByCity(collectorId: Int, cityId: Int): Future[Seq[Int]] = {
+  def getByCollector(collectorId: Int): Future[Seq[(Int, String, Int)]] = {
     val query = for {
-      ((r, _), cp) <-
+      ((r, a), _) <-
+        resources
+          .filter(_.collectedTs.isEmpty)
+          .filter(_.deletedTs.isEmpty) join
+        addresses on (_.addressId === _.id) join
+        collectorPreferences
+          .filter(_.collectorId === collectorId) on (_._1.resourceTypeId === _.resourceTypeId)
+    } yield (a.id, r.pricePerKg, r.weight)
+
+    db.run {
+      query.result
+    }
+  }
+
+  def getByCollectorByCity(collectorId: Int, cityId: Int): Future[Seq[(Int, String, Int)]] = {
+    val query = for {
+      ((r, _), _) <-
         resources
           .filter(_.collectedTs.isEmpty)
           .filter(_.deletedTs.isEmpty) join
@@ -33,16 +47,10 @@ protected class ResourceRepository @Inject()(dbConfigProvider: DatabaseConfigPro
           .filter(_.id === cityId) on (_.addressId === _.id) join
         collectorPreferences
           .filter(_.collectorId === collectorId) on (_._1.resourceTypeId === _.resourceTypeId) sortBy(_._2.priority)
-    } yield (r.id, r.pricePerKg, r.weight, cp.priority)
+    } yield (r.id, r.pricePerKg, r.weight)
 
-    val notSorted = db.run {
+    db.run {
       query.result
-    }
-
-    notSorted.map { list =>
-      list
-        .sortWith((a, b) => BigDecimal(a._2).*(a._3) > BigDecimal(b._2).*(b._3))
-        .map(x => x._1)
     }
   }
 

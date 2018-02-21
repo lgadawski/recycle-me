@@ -1,7 +1,6 @@
 package resources
 
 import javax.inject._
-
 import play.api.libs.json.Writes._
 import play.api.libs.json._
 import play.api.mvc._
@@ -17,8 +16,8 @@ class ResourcesController @Inject()(repository: ResourceRepository,
   import ResourceJsonUtils._
 
   def getAll: Action[AnyContent] = Action.async { implicit request =>
-    repository.list().map { resource =>
-      Ok(Json.toJson(resource))
+    repository.list().map {
+      resource => Ok(Json.toJson(resource))
     }
   }
 

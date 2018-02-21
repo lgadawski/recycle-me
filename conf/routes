@@ -5,6 +5,7 @@
 
 # Recommendation
     GET     /api/resources/recommend        resources.RecommendationController.get(collectorId: Option[Int], cityId: Option[Int])
+    GET     /api/resources/recommend-city   resources.RecommendationController.getCityList(collectorId: Option[Int])
 
 # Resources manipulation
     GET     /api/resources                  resources.ResourcesController.getAll
