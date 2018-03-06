@@ -30,7 +30,7 @@ class ResourceRecommendationFacadeImpl @Inject()(resourceRepository: ResourceRep
 
   override def recommendResources(collectorId: Int, cityId: Int): Future[Seq[(Int, Price)]] = {
     val resources: Future[Seq[(Int, String, Int)]] = resourceRepository.getByCollectorByCity(collectorId, cityId)
-val x: Int = null
+
     resources.map {
       _
         .map(a => (a._1, Price(BigDecimal(a._2)).multiply(a._3)))

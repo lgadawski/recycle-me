@@ -14,6 +14,7 @@ object Price {
   implicit val resourceFormat: OFormat[Price] = Json.format[Price]
 
   implicit val priceNumeric: Numeric[Price] = new Numeric[Price] {
+
     override def plus(x: Price, y: Price): Price = Price(x.value + y.value)
 
     override def minus(x: Price, y: Price): Price = Price(x.value - y.value)
